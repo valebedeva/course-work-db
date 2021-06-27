@@ -1,0 +1,124 @@
+version: "3.7"
+
+networks:
+  patroni:
+    name: patroni
+    driver: bridge
+  
+services:
+  zoo1:
+    image: zookeeper:3.4
+    hostname: zoo1
+    ports:
+      - 2191:2181
+    networks:
+      - patroni
+    environment:
+      ZOO_MY_ID: 1
+      ZOO_SERVERS: server.1=0.0.0.0:2888:3888 server.2=zoo2:2888:3888 server.3=zoo3:2888:3888
+
+
+  zoo2:
+    image: zookeeper:3.4
+    hostname: zoo2
+    networks:
+      - patroni
+    ports:
+      - 2192:2181
+    environment:
+      ZOO_MY_ID: 2
+      ZOO_SERVERS: server.1=zoo1:2888:3888 server.2=0.0.0.0:2888:3888 server.3=zoo3:2888:3888
+
+
+  zoo3:
+    image: zookeeper:3.4
+    hostname: zoo3
+    networks:
+      - patroni
+    ports:
+      - 2193:2181
+    environment:
+      ZOO_MY_ID: 3
+      ZOO_SERVERS: server.1=zoo1:2888:3888 server.2=zoo2:2888:3888 server.3=0.0.0.0:2888:3888
+
+
+  patroni1:
+    build: patroni_image/
+    hostname: patroni1
+    networks:
+      - patroni
+    ports:
+      - 5441:5432
+      - 8091:8091
+    volumes:
+      - ./patroni.yml:/etc/patroni.yml
+      - ./patroni1:/data/patroni
+    environment:
+      PATRONI_API_CONNECT_PORT: 8091
+      REPLICATION_NAME: replicator 
+      REPLICATION_PASS: replpass
+      SU_NAME: postgres
+      SU_PASS: supass
+      POSTGRES_APP_ROLE_PASS: 12345678
+      POSTGRES_DB: pki
+
+            
+  patroni2:
+    build: patroni_image/
+    hostname: patroni2
+    networks: 
+      - patroni 
+    ports:
+      - 5442:5432
+      - 8092:8091
+    volumes:
+      - ./patroni.yml:/etc/patroni.yml
+      - ./patroni2:/data/patroni
+    environment:
+      PATRONI_API_CONNECT_PORT: 8091
+      REPLICATION_NAME: replicator 
+      REPLICATION_PASS: replpass
+      SU_NAME: postgres
+      SU_PASS: supass
+      POSTGRES_APP_ROLE_PASS: 12345678
+      POSTGRES_DB: pki
+
+  patroni3:
+    build: patroni_image/
+    hostname: patroni3
+    networks: 
+      - patroni 
+    ports:
+      - 5443:5432
+      - 8093:8091
+    volumes:
+      - ./patroni.yml:/etc/patroni.yml
+      - ./patroni3:/data/patroni
+    environment:
+      PATRONI_API_CONNECT_PORT: 8091
+      REPLICATION_NAME: replicator 
+      REPLICATION_PASS: replpass
+      SU_NAME: postgres
+      SU_PASS: supass
+      POSTGRES_APP_ROLE_PASS: 12345678
+      POSTGRES_DB: pki
+      
+  haproxy:
+    build: haproxy_image/
+    networks: 
+      - patroni 
+    hostname: haproxy
+    ports:
+      - 5000:5000
+      - 7000:7000
+    volumes:
+      - ./haproxy.cfg:/usr/local/etc/haproxy/haproxy.cfg
+      
+  ca-backend:
+    build: backend_image/
+    networks: 
+      - patroni 
+    hostname: ca-backend
+    ports:
+      - 8777:8000
+      

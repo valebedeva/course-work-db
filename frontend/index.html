@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+
+        <script type="text/javascript" src="dependencies.js"></script>
+
+        <script type="text/javascript" src="libs/jquery/1.7.1/jquery.min.js"></script>
+        <script type="text/javascript" src="libs/jquery/1.7.1/jquery-base64.min.js"></script>
+
+        <script type="text/javascript" src="libs/jqueryui/1.8.16/jquery-ui.min.js"></script>
+
+        <script type="text/javascript" src="libs/syntaxhighligher/3.0.83/js/shCore.js"></script>
+        <script type="text/javascript" src="libs/syntaxhighligher/3.0.83/js/shBrushJScript.js"></script>
+
+        <link rel="stylesheet" type="text/css" href="libs/syntaxhighligher/3.0.83/css/shCore.css">
+        <link rel="stylesheet" type="text/css" href="style.css">
+
+        <script type="text/javascript" src="present.js"></script>
+        <script type="text/javascript" src="cmc.js"></script>
+
+        <title>SDK Рутокен Плагин</title>
+
+    </head>
+    <body>
+        <div id="container">
+            <div id="content">
+                <div id="section">
+                    <ul>
+                        <li><a href="#section-1"><span>Пользовательские сертификаты</span></a></li>
+                        <li><a href="#section-2"><span>Корневые сертификаты</span></a></li>
+                        <li><a href="#section-3"><span>Выписать сертификат на токен</span></a></li>
+                    </ul>
+
+                    <div id="section-1">
+                        <div id="GetNamesUserCert" class="group">
+                            <ul>
+                              <p>Список сертификатов ca и subca:</p>
+                              <button id="refresh-user-cert-chain-list-from-db">Обновить</button>
+                              <div class="group-cert">
+                              </div>
+                            </ul>
+                        </div>
+
+                        <div id="GenUserCert" class="group">
+                            <ul>
+                              <label>Display Name</label>
+                              <input type="text" class="gen-user-cert-dn input" value='some display name' />
+                              <label>Common name</label>
+                              <input type="text" class="gen-user-cert-cn input" value='some common name' />
+                              <dl>
+                                  <dt><label for="ca-list-from-db-4">Пользовательские сертификаты в базе для подписи: </label></dt>
+                                  <dd>
+                                      <select id="ca-list-from-db-4">
+                                          <option>Обновите список сертификатов</option>
+                                      </select>
+                                      <button id="refresh-ca-list-from-db-4">↓↑</button>
+                                  </dd>
+                              </dl>
+                            </ul>
+                        </div>
+
+                        <div id="GetUserCert" class="group">
+                            <ul>
+                              <dl>
+                                  <dt><label for="user-cert-list-from-db-4">Конечные сертификаты в базе: </label></dt>
+                                  <dd>
+                                      <select id="user-cert-list-from-db-4">
+                                          <option>Обновите список сертификатов</option>
+                                      </select>
+                                      <button id="refresh-user-cert-list-from-db-4">↓↑</button>
+                                  </dd>
+                                  <label for="type-getting-cert">Формат сертификата </label>
+                                  <select id="type-getting-cert">
+                                      <option value="pem">pem</option>
+                                      <option value="p12">p12</option>
+                                  </select>
+                                  <dt><label for="get-user-cert-password">Пароль для p12: </label></dt>
+                                  <dd><input id="get-user-cert-password" type="text" value="password"></dd>
+                              </dl>
+                            </ul>
+                        </div>
+
+                        <div id="DeleteUserCert" class="group">
+                            <ul>
+                              <dl>
+                                  <dt><label for="user-cert-list-from-db-2">Конечные сертификаты в базе: </label></dt>
+                                  <dd>
+                                      <select id="user-cert-list-from-db-2">
+                                          <option>Обновите список сертификатов</option>
+                                      </select>
+                                      <button id="refresh-user-cert-list-from-db-2">↓↑</button>
+                                  </dd>
+                              </dl>
+                            </ul>
+                        </div>
+
+                        <div id="PutUserCert" class="group">
+                            <ul>
+                              <dl>
+                                  <dt><label for="user-cert-list-from-db-3">Корневые и промежуточные сертификаты в базе: </label></dt>
+                                  <dd>
+                                      <select id="user-cert-list-from-db-3">
+                                          <option>Обновите список сертификатов</option>
+                                      </select>
+                                      <button id="refresh-user-cert-list-from-db-3">↓↑</button>
+                                      <label>Новое имя сертификата</label>
+                                      <input type="text" class="put-user-cert-dn input" value='new display name' />
+                                  </dd>
+                              </dl>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div id="section-2">
+                        <div id="GetNamesCa" class="group">
+                            <ul>
+                              <p>Список сертификатов ca и subca:</p>
+                              <button id="refresh-ca-chain-list-from-db">Обновить</button>
+                              <div class="group-ca">
+                              </div>
+                            </ul>
+                        </div>
+
+                        <div id="GenCa" class="group">
+                            <ul>
+                              <label>Display Name</label>
+                              <input type="text" class="gen-ca-cert-dn input" value='some display name' />
+                              <label>Common name</label>
+                              <input type="text" class="gen-ca-cert-cn input" value='some common name' />
+                              <dl>
+                                  <dt><label for="ca-list-from-db-1">Корневые и промежуточные сертификаты в базе для подписи: </label></dt>
+                                  <dd>
+                                      <select id="ca-list-from-db-1">
+                                          <option>Обновите список сертификатов</option>
+                                      </select>
+                                      <button id="refresh-ca-list-from-db-1">↓↑</button>
+                                  </dd>
+                              </dl>
+                            </ul>
+                        </div>
+
+                        <div id="GetCa" class="group">
+                            <ul>
+                              <dl>
+                                  <dt><label for="ca-list-from-db-5">Корневые и промежуточные сертификаты в базе: </label></dt>
+                                  <dd>
+                                      <select id="ca-list-from-db-5">
+                                          <option>Обновите список сертификатов</option>
+                                      </select>
+                                      <button id="refresh-ca-list-from-db-5">↓↑</button>
+                                  </dd>
+                              </dl>
+                            </ul>
+                        </div>
+
+                        <div id="DeleteCa" class="group">
+                            <ul>
+                              <dl>
+                                  <dt><label for="ca-list-from-db-2">Корневые и промежуточные сертификаты в базе: </label></dt>
+                                  <dd>
+                                      <select id="ca-list-from-db-2">
+                                          <option>Обновите список сертификатов</option>
+                                      </select>
+                                      <button id="refresh-ca-list-from-db-2">↓↑</button>
+                                  </dd>
+                              </dl>
+                            </ul>
+                        </div>
+
+                        <div id="PutCa" class="group">
+                            <ul>
+                              <dl>
+                                  <dt><label for="ca-list-from-db-3">Корневые и промежуточные сертификаты в базе: </label></dt>
+                                  <dd>
+                                      <select id="ca-list-from-db-3">
+                                          <option>Обновите список сертификатов</option>
+                                      </select>
+                                      <button id="refresh-ca-list-from-db-3">↓↑</button>
+                                      <label>Новое имя сертификата</label>
+                                      <input type="text" class="put-ca-dn input" value='new display name' />
+                                  </dd>
+                              </dl>
+                            </ul>
+                        </div>
+
+                    </div>
+
+
+                    <div id="section-3">
+                      <div class="common">
+                          <dl>
+                              <dt><label for="device-list">Доступные устройства:</label></dt>
+                              <dd>
+                                  <select id="device-list">
+                                      <option>Обновите список устройств</option>
+                                  </select>
+                                  <button id="refresh-dev">↓↑</button>
+                              </dd>
+                          </dl><dl>
+                              <dt><label for="device-list">PIN-код:</label></dt>
+                              <dd>
+                                  <input    id="device-pin" type="text"    value="12345678" />
+                                  <button id="login">Войти</button>
+                                  <button id="logout">Выйти</button>
+                                  <button id="save-pin">Сохранить PIN-код</button>
+                                  <button id="remove-pin">Удалить PIN-код</button>
+                              </dd>
+                          </dl><dl>
+                              <dt><label for="key-list">Ключи на устройстве: </label></dt>
+                              <dd>
+                                  <select id="key-list">
+                                      <option>Выполните вход на устройство</option>
+                                  </select>
+                                  <button id="refresh-keys">↓↑</button>
+                              </dd>
+                          </dl><dl>
+                              <dt><label for="cert-list">Сертификаты на уcтройстве: </label></dt>
+                              <dd>
+                                  <select id="cert-list">
+                                      <option>Обновите список сертификатов</option>
+                                  </select>
+                                  <button id="refresh-certs">↓↑</button>
+                              </dd>
+                          </dl>
+                      </div>
+                        <div id="GenTokenCert" class="group">
+                          <ul>
+                              <li>
+                                  <label>Display Name</label>
+                                  <input type="text" class="gen-token-cert-dn input" value='some display name' />
+                                  <dl>
+                                      <dt><label for="ca-list-from-db-0">Ca cертификаты в базе: </label></dt>
+                                      <dd>
+                                          <select id="ca-list-from-db-0">
+                                              <option>Обновите список сертификатов</option>
+                                          </select>
+                                          <button id="refresh-ca-list-from-db-0">↓↑</button>
+                                      </dd>
+                                  </dl>
+
+                                  <label>subjectSignTool:</label>
+                                  <input type="text" class="subject-sign-tool input" value='СКЗИ "РУТОКЕН ЭЦП"' />
+                                  <label>Алгоритм хэширования:</label>
+                                  <select class="hash-algorithm">
+                                      <option value="HASH_TYPE_SHA256">SHA256</option>
+                                      <option value="HASH_TYPE_GOST3411_94">ГОСТ Р 34.11-94</option>
+                                      <option value="HASH_TYPE_GOST3411_12_256">ГОСТ Р 34.11-12 256</option>
+                                      <option value="HASH_TYPE_GOST3411_12_512">ГОСТ Р 34.11-12 512</option>
+                                      <option value="HASH_TYPE_MD5">MD5</option>
+                                      <option value="HASH_TYPE_SHA1">SHA1</option>
+                                      <option value="HASH_TYPE_SHA512">SHA512</option>
+                                  </select>
+                              </li>
+                              <li id="cert-subject">
+                                  <table>
+                                      <tr>
+                                          <th><label>countryName</label></th>
+                                          <td><input type="text" id="countryName" value="RU" class="subject-input"/></td>
+                                          <th><label>stateOrProvinceName</label></th>
+                                          <td><input type="text" id="stateOrProvinceName" value="Moscow" class="subject-input"/></td>
+                                      </tr>
+                                      <tr>
+                                          <th><label>localityName</label></th>
+                                          <td><input type="text" id="localityName" value="msk" class="subject-input"/></td>
+                                          <th><label>streetAddress</label></th>
+                                          <td><input type="text" id="streetAddress" value="street" class="subject-input"/></td>
+                                      </tr>
+                                      <tr>
+                                          <th><label>organizationName</label></th>
+                                          <td><input type="text" id="organizationName" value="Aktiv" class="subject-input"/></td>
+                                          <th><label>organizationalUnitName</label></th>
+                                          <td><input type="text" id="organizationalUnitName" value="IT" class="subject-input"/></td>
+                                      </tr>
+                                      <tr>
+                                          <th><label>postalAddress</label></th>
+                                          <td><input type="text" id="postalAddress" value="postal address" class="subject-input"/></td>
+                                          <th><label>title</label></th>
+                                          <td><input type="text" id="title" value="должность" class="subject-input"/></td>
+                                      </tr>
+                                      <tr>
+                                          <th><label>INN</label></th>
+                                          <td><input type="text" id="INN" value="12345678987" class="subject-input"/></td>
+                                          <th><label>SNILS</label></th>
+                                          <td><input type="text" id="SNILS" value="12345678987" class="subject-input"/></td>
+                                      </tr>
+                                      <tr>
+                                          <th><label>OGRN</label></th>
+                                          <td><input type="text" id="OGRN" value="12345678987" class="subject-input"/></td>
+                                          <th><label>OGRNIP</label></th>
+                                          <td><input type="text" id="OGRNIP" value="12345678987" class="subject-input"/></td>
+                                      </tr>
+                                      <tr>
+                                          <th><label>commonName</label></th>
+                                          <td><input type="text" id="commonName" value="Фамилия Имя Отчество" class="gen-token-cert-cn"/></td>
+                                          <th><label>pseudonym</label></th>
+                                          <td><input type="text" id="pseudonym" value="pseudonym" class="subject-input"/></td>
+                                      </tr>
+                                      <tr>
+                                          <th><label>surname</label></th>
+                                          <td><input type="text" id="surname" value="surname" class="subject-input"/></td>
+                                          <th><label>givenName</label></th>
+                                          <td><input type="text" id="givenName" value="given name" class="subject-input"/></td>
+                                      </tr>
+                                      <tr>
+                                          <th><label>emailAddress</label></th>
+                                          <td><input type="text" id="emailAddress" value="example@example.com" class="subject-input"/></td>
+                                          <th></th>
+                                          <td></td>
+                                      </tr>
+                                  </table>
+                              </li>
+                              <li>
+                                  <table id="cert-extensions" class="inlineblock">
+                                      <tr>
+                                          <th>Key Usage</th>
+                                          <th>Ext Key Usage</th>
+                                          <th>Policies</th>
+                                      </tr>
+                                      <tr>
+                                          <td><label><input class="checkbox-input" type="checkbox" name="cert-exts-keyusage" value="digitalSignature" checked="checked"/>digitalSignature</label></td>
+                                          <td><label><input class="checkbox-input" type="checkbox" name="cert-exts-extkeyusage" value="emailProtection" checked="checked"/>emailProtection</label></td>
+                                          <td><label><input class="checkbox-input" type="checkbox" name="cert-exts-policies" value="1.2.643.100.113.1" checked="checked"/>КС1</label></td>
+                                      </tr>
+                                      <tr>
+                                          <td><label><input class="checkbox-input" type="checkbox" name="cert-exts-keyusage" value="nonRepudiation" checked="checked"/>nonRepudiation</label></td>
+                                          <td><label><input class="checkbox-input" type="checkbox" name="cert-exts-extkeyusage" value="clientAuth" />clientAuth</label></td>
+                                          <td><label><input class="checkbox-input" type="checkbox" name="cert-exts-policies" value="1.2.643.100.113.2"/>КС2</label></td>
+                                      </tr>
+                                      <tr>
+                                          <td><label><input class="checkbox-input" type="checkbox" name="cert-exts-keyusage" value="keyEncipherment"/>keyEncipherment</label></td>
+                                          <td><label><input class="checkbox-input" type="checkbox" name="cert-exts-extkeyusage" value="serverAuth" />serverAuth</label></td>
+                                          <td><label><input class="checkbox-input" type="checkbox" name="cert-exts-policies" value="1.2.643.100.113.3"/>КС3</label></td>
+                                      </tr>
+                                      <tr>
+                                          <td><label><input class="checkbox-input" type="checkbox" name="cert-exts-keyusage" value="dataEncipherment" />dataEncipherment</label></td>
+                                          <td><label><input class="checkbox-input" type="checkbox" name="cert-exts-extkeyusage" value="codeSigning" />codeSigning</label></td>
+                                          <td><label><input class="checkbox-input" type="checkbox" name="cert-exts-policies" value="1.2.643.100.113.4"/>КВ1</label></td>
+                                      </tr>
+                                      <tr>
+                                          <td><label><input class="checkbox-input" type="checkbox" name="cert-exts-keyusage" value="keyAgreement"/>keyAgreement</label></td>
+                                          <td><label><input class="checkbox-input" type="checkbox" name="cert-exts-extkeyusage" value="timeStamping" />timeStamping</label></td>
+                                          <td><label><input class="checkbox-input" type="checkbox" name="cert-exts-policies" value="1.2.643.100.113.5"/>КВ2</label></td>
+                                      </tr>
+                                      <tr>
+                                          <td><label><input class="checkbox-input" type="checkbox" name="cert-exts-keyusage" value="keyCertSign"/>keyCertSign</label></td>
+                                          <td><label><input class="checkbox-input" type="checkbox" name="cert-exts-extkeyusage" value="msCodeInd" />msCodeInd</label></td>
+                                          <td><label><input class="checkbox-input" type="checkbox" name="cert-exts-policies" value="1.2.643.100.113.6"/>КА1</label></td>
+                                      </tr>
+                                      <tr>
+                                          <td><label><input class="checkbox-input" type="checkbox" name="cert-exts-keyusage" value="cRLSign"/>cRLSign</label></td>
+                                          <td><label><input class="checkbox-input" type="checkbox" name="cert-exts-extkeyusage" value="msCodeCom" />msCodeCom</label></td>
+                                      </tr>
+                                      <tr>
+                                          <td><label><input class="checkbox-input" type="checkbox" name="cert-exts-keyusage" value="encipherOnly"/>encipherOnly</label></td>
+                                          <td><label><input class="checkbox-input" type="checkbox" name="cert-exts-extkeyusage" value="msCTLSign" />msCTLSign</label></td>
+                                      </tr>
+                                      <tr>
+                                          <td><label><input class="checkbox-input" type="checkbox" name="cert-exts-keyusage" value="decipherOnly"/>decipherOnly</label></td>
+                                          <td><label><input class="checkbox-input" type="checkbox" name="cert-exts-extkeyusage" value="1.3.6.1.5.5.7.3.9" />OCSP</label></td>
+                                      </tr>
+                                      <tr>
+                                          <td></td>
+                                          <td><label><input class="checkbox-input" type="checkbox" name="cert-exts-extkeyusage" value="1.2.643.2.2.34.6" />CryptoPro RA user</label></td>
+                                      </tr>
+                                  </table>
+                                  <table id="custom-extensions" class="inlineblock">
+                                      <tr>
+                                          <th colspan="2">Custom Extensions</th>
+                                      </tr>
+                                      <tr>
+                                          <td><label>OID</label></td>
+                                          <td><input type="text" value="1.3.6.1.4.1.311.21.7" name="custom-ext-oid"></td>
+                                      </tr>
+                                      <tr>
+                                          <td><label>value</label></td>
+                                          <td><input type="text" value="MA0GCCqFAwICLgAIAgEB" name="custom-ext-value"></td>
+                                      </tr>
+                                      <tr>
+                                          <td><label><input class="checkbox-input" type="checkbox" name="custom-ext-crit">Critical</label></td>
+                                          <td><label style="color: grey;">value должен быть в base64</label></td>
+                                      </tr>
+                                      <tr>
+                                          <td colspan="2"><button id="add-custom-extension" class="example">Добавить новое расширение</button></td>
+                                      </tr>
+                                  </table>
+                              </li>
+                          </ul>
+                        </div>
+
+                        <div id="GetTokenCert" class="group">
+                          <ul>
+                            <dt><label for="user-cert-list-from-db-0">Доступные сертификаты для сохранения: </label></dt>
+                                <select id="user-cert-list-from-db-0">
+                                    <option>Обновите список сертификатов</option>
+                                </select>
+                                <button id="refresh-user-cert-list-from-db-0">↓↑</button>
+                          </ul>
+                        </div>
+
+                    </div>
+
+
+
+                </div>
+            </div>
+        </div>
+        <div class="dummy">
+        <div id="bottom-bar-container">
+        <div id="console-container">
+            <div id="console"></div>
+        </div>
+        </div>
+
+    </body>
+</html>
+<!-- vim: tabstop=4:softtabstop=4:shiftwidth=4:expandtab
+        ->

@@ -1,0 +1,22 @@
+create database pki;
+
+\c pki;
+
+CREATE TABLE ca (
+     id    uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+     cert   text NOT NULL,
+     privateKey text NOT NULL,
+     CN text NOT NULL,
+     displayName text NOT NULL,
+     signedId uuid NULL REFERENCES ca(id)
+);
+
+CREATE TABLE userCert (
+     id    uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+     cert   text NOT NULL,
+     privateKey text,
+     CN text NOT NULL,
+     displayName text NOT NULL,
+     signedId uuid NOT NULL REFERENCES ca(id),
+     issued boolean DEFAULT false
+);
